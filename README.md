@@ -4,76 +4,76 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
-**Hexa Dashboard** is a powerful, modern, and high-performance ads management platform designed to streamline your campaign tracking, lead management, and reporting. Built with the latest web technologies, it offers a seamless and responsive user experience.
+**Hexa Dashboard** é uma plataforma de gerenciamento de anúncios poderosa, moderna e de alto desempenho, projetada para otimizar o rastreamento de campanhas, gerenciamento de leads e relatórios. Construído com as tecnologias web mais recentes, oferece uma experiência de usuário fluida e responsiva.
 
-## ✨ Features
+## ✨ Funcionalidades
 
-*   **📊 Interactive Dashboard**: Real-time visualization of key performance indicators (KPIs).
-*   **📢 Campaign Management**: Create, edit, and track ad campaigns across multiple platforms.
-*   **👥 Lead Tracking**: comprehensive lead management system with status tracking.
-*   **📈 Detailed Reports**: In-depth analytics and exportable reports for data-driven decisions.
-*   **🔐 Secure Authentication**: Robust JWT-based authentication with social login support (Google, GitHub).
-*   **🎨 Modern UI/UX**: A beautiful, dark-themed interface built with Tailwind CSS and Framer Motion.
-*   **📱 Responsive Design**: Fully optimized for desktop, tablet, and mobile devices.
+*   **📊 Dashboard Interativo**: Visualização em tempo real dos principais indicadores de desempenho (KPIs).
+*   **📢 Gerenciamento de Campanhas**: Crie, edite e acompanhe campanhas publicitárias em várias plataformas.
+*   **👥 Rastreamento de Leads**: Sistema abrangente de gerenciamento de leads com rastreamento de status.
+*   **📈 Relatórios Detalhados**: Análises aprofundadas e relatórios exportáveis para decisões baseadas em dados.
+*   **🔐 Autenticação Segura**: Autenticação robusta baseada em JWT com suporte a login social (Google, GitHub).
+*   **🎨 UI/UX Moderna**: Uma interface bonita e com tema escuro, construída com Tailwind CSS e Framer Motion.
+*   **📱 Design Responsivo**: Totalmente otimizado para desktop, tablets e dispositivos móveis.
 
-## 🛠️ Tech Stack
+## 🛠️ Stack Tecnológico
 
 ### Frontend
 *   **Framework**: [React](https://reactjs.org/) (v18)
-*   **Build Tool**: [Vite](https://vitejs.dev/)
-*   **Language**: [TypeScript](https://www.typescriptlang.org/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4 - CSS-first configuration)
-*   **Icons**: [Lucide React](https://lucide.dev/)
-*   **Routing**: [React Router](https://reactrouter.com/)
-*   **State Management**: React Context API
-*   **Forms**: React Hook Form + Zod Validation
+*   **Ferramenta de Build**: [Vite](https://vitejs.dev/)
+*   **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
+*   **Estilização**: [Tailwind CSS](https://tailwindcss.com/) (v4 - Configuração CSS-first)
+*   **Ícones**: [Lucide React](https://lucide.dev/)
+*   **Roteamento**: [React Router](https://reactrouter.com/)
+*   **Gerenciamento de Estado**: React Context API
+*   **Formulários**: React Hook Form + Validação Zod
 
 ### Backend
 *   **Runtime**: [Node.js](https://nodejs.org/)
 *   **Framework**: [Express.js](https://expressjs.com/)
-*   **Database ORM**: [Prisma](https://www.prisma.io/)
-*   **Authentication**: JSON Web Tokens (JWT)
+*   **ORM de Banco de Dados**: [Prisma](https://www.prisma.io/)
+*   **Autenticação**: JSON Web Tokens (JWT)
 
-## 🚀 Getting Started
+## 🚀 Começando
 
-Follow these steps to set up the project locally on your machine.
+Siga estes passos para configurar o projeto localmente em sua máquina.
 
-### Prerequisites
+### Pré-requisitos
 
-*   [Node.js](https://nodejs.org/) (v16 or higher)
-*   [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+*   [Node.js](https://nodejs.org/) (v16 ou superior)
+*   [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 *   [Git](https://git-scm.com/)
 
-### Installation
+### Instalação
 
-1.  **Clone the repository**
+1.  **Clone o repositório**
     ```bash
     git clone https://github.com/Juvinho/Hexa.git
     cd Hexa
     ```
 
-2.  **Install dependencies**
+2.  **Instale as dependências**
     ```bash
-    # Install root dependencies (if any)
+    # Instalar dependências da raiz (se houver)
     npm install
 
-    # Install Frontend dependencies
+    # Instalar dependências do Frontend
     npm install
 
-    # Install Backend dependencies
+    # Instalar dependências do Backend
     cd server
     npm install
     cd ..
     ```
 
-3.  **Environment Configuration**
-    Create a `.env` file in the `server` directory and configure your database and JWT secret:
+3.  **Configuração de Ambiente**
+    Crie um arquivo `.env` no diretório `server` e configure seu banco de dados e segredo JWT:
     ```env
     DATABASE_URL="file:./dev.db"
-    JWT_SECRET="your_super_secret_key"
+    JWT_SECRET="sua_chave_super_secreta"
     ```
 
-4.  **Database Setup**
+4.  **Configuração do Banco de Dados**
     ```bash
     cd server
     npx prisma generate
@@ -81,8 +81,8 @@ Follow these steps to set up the project locally on your machine.
     cd ..
     ```
 
-5.  **Run the Application**
-    You can run both frontend and backend concurrently (if scripts are set up) or in separate terminals.
+5.  **Rodar a Aplicação**
+    Você pode rodar o frontend e o backend simultaneamente (se os scripts estiverem configurados) ou em terminais separados.
 
     **Terminal 1 (Backend):**
     ```bash
@@ -95,33 +95,33 @@ Follow these steps to set up the project locally on your machine.
     npm run dev
     ```
 
-6.  **Access the Dashboard**
-    Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal).
+6.  **Acessar o Dashboard**
+    Abra seu navegador e acesse `http://localhost:5173` (ou a porta mostrada no seu terminal).
 
-## 🧪 Testing
+## 🧪 Testes
 
-To run the automated tests:
+Para rodar os testes automatizados:
 
 ```bash
 npm run test
 ```
 
-## 🤝 Contributing
+## 🤝 Contribuindo
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contribuições são bem-vindas! Sinta-se à vontade para enviar um Pull Request.
 
-1.  Fork the project
-2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+1.  Faça um Fork do projeto
+2.  Crie sua branch de feature (`git checkout -b feature/RecursoIncrivel`)
+3.  Faça o Commit de suas mudanças (`git commit -m 'Adiciona algum RecursoIncrivel'`)
+4.  Faça o Push para a branch (`git push origin feature/RecursoIncrivel`)
+5.  Abra um Pull Request
 
-## 📄 License
+## 📄 Licença
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/Juvinho">Juvinho</a>
+  Feito com ❤️ por <a href="https://github.com/Juvinho">Juvinho</a>
 </p>
