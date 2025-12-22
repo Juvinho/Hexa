@@ -1,38 +1,97 @@
 # Hexa Dashboard 🚀
 
+<div align="center">
+
 ![Hexa Dashboard Banner](https://img.shields.io/badge/Hexa-Dashboard-indigo?style=for-the-badge&logo=react)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 
-**Hexa Dashboard** é uma plataforma de gerenciamento de anúncios poderosa, moderna e de alto desempenho, projetada para otimizar o rastreamento de campanhas, gerenciamento de leads e relatórios. Construído com as tecnologias web mais recentes, oferece uma experiência de usuário fluida e responsiva.
+**A Solução Definitiva para Gestão de Anúncios e Campanhas.**
+
+[Demonstração](#) • [Funcionalidades](#-funcionalidades) • [Instalação](#-instalação) • [Contribuir](#-contribuindo)
+
+</div>
+
+---
+
+## 📖 Sobre
+
+**Hexa Dashboard** é uma plataforma de gerenciamento de anúncios poderosa, moderna e de alto desempenho, projetada para otimizar o rastreamento de campanhas, gerenciamento de leads e relatórios. Construído com as tecnologias web mais recentes, oferece uma experiência de usuário fluida, responsiva e visualmente impactante.
+
+Seja você uma agência de marketing ou um gestor de tráfego independente, o Hexa Dashboard fornece as ferramentas necessárias para escalar suas operações.
+
+---
 
 ## ✨ Funcionalidades
 
-*   **📊 Dashboard Interativo**: Visualização em tempo real dos principais indicadores de desempenho (KPIs).
-*   **📢 Gerenciamento de Campanhas**: Crie, edite e acompanhe campanhas publicitárias em várias plataformas.
-*   **👥 Rastreamento de Leads**: Sistema abrangente de gerenciamento de leads com rastreamento de status.
-*   **📈 Relatórios Detalhados**: Análises aprofundadas e relatórios exportáveis para decisões baseadas em dados.
-*   **🔐 Autenticação Segura**: Autenticação robusta baseada em JWT com suporte a login social (Google, GitHub).
-*   **🎨 UI/UX Moderna**: Uma interface bonita e com tema escuro, construída com Tailwind CSS e Framer Motion.
-*   **📱 Design Responsivo**: Totalmente otimizado para desktop, tablets e dispositivos móveis.
+### 🖥️ Painel Principal
+*   **Dashboard Interativo**: Visualização em tempo real dos principais indicadores de desempenho (KPIs).
+*   **Gráficos Dinâmicos**: Acompanhe tendências de crescimento e métricas vitais.
+
+### 📢 Gestão de Campanhas
+*   **Controle Total**: Crie, edite e pause campanhas com facilidade.
+*   **Multi-plataforma**: Suporte para rastreamento de diversas fontes de tráfego.
+
+### 👥 CRM de Leads
+*   **Pipeline de Vendas**: Kanban ou lista para gerenciar o status dos leads.
+*   **Rastreamento Detalhado**: Histórico completo de interações com cada lead.
+
+### ⚙️ Sistema e Segurança
+*   **Autenticação JWT**: Login seguro com suporte a OAuth (Google, GitHub).
+*   **Controle de Acesso (RBAC)**: Permissões granulares para diferentes tipos de usuários.
+*   **Tema Escuro**: Interface "Dark Mode" nativa para menor cansaço visual.
+
+---
 
 ## 🛠️ Stack Tecnológico
 
-### Frontend
+<details>
+  <summary><b>Frontend</b></summary>
+
 *   **Framework**: [React](https://reactjs.org/) (v18)
-*   **Ferramenta de Build**: [Vite](https://vitejs.dev/)
+*   **Build Tool**: [Vite](https://vitejs.dev/)
 *   **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
 *   **Estilização**: [Tailwind CSS](https://tailwindcss.com/) (v4 - Configuração CSS-first)
 *   **Ícones**: [Lucide React](https://lucide.dev/)
 *   **Roteamento**: [React Router](https://reactrouter.com/)
-*   **Gerenciamento de Estado**: React Context API
-*   **Formulários**: React Hook Form + Validação Zod
+*   **Estado**: React Context API
+*   **Formulários**: React Hook Form + Zod
 
-### Backend
+</details>
+
+<details>
+  <summary><b>Backend</b></summary>
+
 *   **Runtime**: [Node.js](https://nodejs.org/)
 *   **Framework**: [Express.js](https://expressjs.com/)
-*   **ORM de Banco de Dados**: [Prisma](https://www.prisma.io/)
-*   **Autenticação**: JSON Web Tokens (JWT)
+*   **ORM**: [Prisma](https://www.prisma.io/)
+*   **Banco de Dados**: SQLite (Dev) / PostgreSQL (Prod)
+*   **Auth**: JSON Web Tokens (JWT)
+
+</details>
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+Hexa/
+├── src/                # Código fonte do Frontend
+│   ├── components/     # Componentes Reutilizáveis
+│   ├── context/        # Gerenciamento de Estado Global
+│   ├── pages/          # Páginas da Aplicação
+│   └── styles/         # Estilos Globais
+├── server/             # Backend API
+│   ├── src/            # Código fonte do Backend
+│   ├── prisma/         # Schemas e Migrations do Banco de Dados
+│   └── routes/         # Rotas da API
+└── public/             # Assets Estáticos
+```
+
+---
 
 ## 🚀 Começando
 
@@ -44,7 +103,7 @@ Siga estes passos para configurar o projeto localmente em sua máquina.
 *   [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 *   [Git](https://git-scm.com/)
 
-### Instalação
+### 🔧 Instalação
 
 1.  **Clone o repositório**
     ```bash
@@ -54,26 +113,20 @@ Siga estes passos para configurar o projeto localmente em sua máquina.
 
 2.  **Instale as dependências**
     ```bash
-    # Instalar dependências da raiz (se houver)
-    npm install
-
-    # Instalar dependências do Frontend
-    npm install
-
-    # Instalar dependências do Backend
-    cd server
-    npm install
-    cd ..
+    npm install         # Raiz
+    cd server && npm install  # Backend
+    cd ..               # Voltar para raiz
     ```
 
-3.  **Configuração de Ambiente**
-    Crie um arquivo `.env` no diretório `server` e configure seu banco de dados e segredo JWT:
+3.  **Configuração de Ambiente (.env)**
+    Crie um arquivo `.env` no diretório `server`:
     ```env
     DATABASE_URL="file:./dev.db"
-    JWT_SECRET="sua_chave_super_secreta"
+    JWT_SECRET="sua_chave_super_secreta_aqui"
+    PORT=3000
     ```
 
-4.  **Configuração do Banco de Dados**
+4.  **Banco de Dados**
     ```bash
     cd server
     npx prisma generate
@@ -82,7 +135,7 @@ Siga estes passos para configurar o projeto localmente em sua máquina.
     ```
 
 5.  **Rodar a Aplicação**
-    Você pode rodar o frontend e o backend simultaneamente (se os scripts estiverem configurados) ou em terminais separados.
+    Recomendamos abrir dois terminais:
 
     **Terminal 1 (Backend):**
     ```bash
@@ -95,33 +148,47 @@ Siga estes passos para configurar o projeto localmente em sua máquina.
     npm run dev
     ```
 
-6.  **Acessar o Dashboard**
-    Abra seu navegador e acesse `http://localhost:5173` (ou a porta mostrada no seu terminal).
-
-## 🧪 Testes
-
-Para rodar os testes automatizados:
-
-```bash
-npm run test
-```
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para enviar um Pull Request.
-
-1.  Faça um Fork do projeto
-2.  Crie sua branch de feature (`git checkout -b feature/RecursoIncrivel`)
-3.  Faça o Commit de suas mudanças (`git commit -m 'Adiciona algum RecursoIncrivel'`)
-4.  Faça o Push para a branch (`git push origin feature/RecursoIncrivel`)
-5.  Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+6.  **Acessar**
+    Abra `http://localhost:5173` no seu navegador.
 
 ---
 
-<p align="center">
-  Feito com ❤️ por <a href="https://github.com/Juvinho">Juvinho</a>
-</p>
+## 🗺️ Roadmap
+
+- [x] Dashboard Inicial
+- [x] Autenticação (Login/Registro)
+- [x] CRUD de Campanhas
+- [x] Listagem de Leads
+- [ ] Integração com Facebook Ads API
+- [ ] Exportação de Relatórios em PDF/CSV
+- [ ] Sistema de Notificações em Tempo Real
+- [ ] Modo Light (Tema Claro)
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são o que fazem a comunidade open source um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será **muito apreciada**.
+
+1.  Faça um Fork do projeto
+2.  Crie sua Feature Branch (`git checkout -b feature/RecursoIncrivel`)
+3.  Commit suas mudanças (`git commit -m 'Add: RecursoIncrivel'`)
+4.  Push para a Branch (`git push origin feature/RecursoIncrivel`)
+5.  Abra um Pull Request
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+<div align="center">
+
+**Feito com ❤️ por [Juvinho](https://github.com/Juvinho)**
+
+[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/seu-linkedin)](https://www.linkedin.com/in/seu-linkedin)
+[![Gmail Badge](https://img.shields.io/badge/-Gmail-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:seuemail@gmail.com)](mailto:seuemail@gmail.com)
+
+</div>
