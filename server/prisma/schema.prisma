@@ -12,14 +12,25 @@ model User {
   email        String        @unique
   password     String?
   name         String
-  role         String        @default("USER") // ADMIN, USER
+  role         String        @default("USER") // ADMIN, USER, GUEST
   emailVerified DateTime?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  
+  // New fields for Client requirements
+  lastLogin    DateTime?
+  status       String        @default("ACTIVE") // ACTIVE, SUSPENDED, INACTIVE
+  apiKey       String?       @unique // Authentication Token
+
+  // Relations
   integrations Integration[]
   refreshTokens RefreshToken[]
   passwordResetTokens PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  
+  // New Relations
+  trafficMetrics TrafficMetric[]
+  settings       Settings?
 }
 
 model PasswordResetToken {
@@ -91,4 +102,47 @@ model DailyMetric {
   createdAt   DateTime @default(now())
 
   @@unique([campaignId, date])
+}
+
+// --- New Models for Traffic Dashboard ---
+
+model Api {
+  id          String   @id @default(uuid())
+  endpoint    String   @unique
+  method      String   // GET, POST, PUT, DELETE
+  description String?
+  rateLimit   Int      @default(100) // Requests per minute
+  status      String   @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  metrics     TrafficMetric[]
+}
+
+model TrafficMetric {
+  id        String   @id @default(uuid())
+  apiId     String
+  api       Api      @relation(fields: [apiId], references: [id], onDelete: Restrict)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  timestamp DateTime @default(now())
+  status    Int      // HTTP Status Code (200, 400, 500)
+  duration  Int      // Response time in ms
+  size      Int      // Request/Response size in bytes
+  ip        String   // Source IP address
+
+  @@index([apiId])
+  @@index([userId])
+  @@index([timestamp])
+  @@index([status])
+}
+
+model Settings {
+  id             String @id @default(uuid())
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageLimits    String? // JSON: { maxRequests: 1000, ... }
+  trafficAlerts  String? // JSON: { threshold: 80, email: true }
+  notifications  String? // JSON: { email: true, sms: false }
+  dashboardView  String? // JSON: { theme: 'dark', widgets: [] }
+  updatedAt      DateTime @updatedAt
 }

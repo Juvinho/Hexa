@@ -10,6 +10,14 @@ import crypto from 'crypto';
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh_secret';
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/'
+};
+
 export const generateTokens = (user: { id: string, role: string }) => {
   const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '15m' });
   const refreshToken = jwt.sign({ id: user.id, jti: crypto.randomUUID() }, REFRESH_SECRET, { expiresIn: '7d' });
@@ -19,9 +27,7 @@ export const generateTokens = (user: { id: string, role: string }) => {
 export const authController = {
   async register(req: Request, res: Response) {
     try {
-      // Zod Validation
       const validatedData = registerSchema.parse(req.body);
-      
       const { email, password, name } = validatedData;
       
       const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -32,11 +38,7 @@ export const authController = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          name
-        }
+        data: { email, password: hashedPassword, name }
       });
 
       const { token, refreshToken } = generateTokens(user);
@@ -45,17 +47,16 @@ export const authController = {
         data: {
           token: refreshToken,
           userId: user.id,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         }
       });
 
-      // Email Verification
       const verificationToken = crypto.randomBytes(32).toString('hex');
       await prisma.emailVerificationToken.create({
         data: {
           token: verificationToken,
           userId: user.id,
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
         }
       });
 
@@ -66,9 +67,18 @@ export const authController = {
         emailService.getVerificationTemplate(verificationLink)
       );
 
+      // CSRF Token (Double Submit Cookie Pattern)
+      const csrfToken = crypto.randomBytes(32).toString('hex');
+      res.cookie('X-CSRF-Token', csrfToken, { 
+        httpOnly: false, // Accessible by JS
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/'
+      });
+
+      res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
       res.status(201).json({ 
         token, 
-        refreshToken,
         user: { id: user.id, email: user.email, name: user.name } 
       });
     } catch (error) {
@@ -94,7 +104,6 @@ export const authController = {
 
       const { token, refreshToken } = generateTokens(user);
 
-      // Revoke old refresh tokens? Optional policy. For now, just add new one.
       await prisma.refreshToken.create({
         data: {
           token: refreshToken,
@@ -103,9 +112,18 @@ export const authController = {
         }
       });
 
+      // CSRF Token (Double Submit Cookie Pattern)
+      const csrfToken = crypto.randomBytes(32).toString('hex');
+      res.cookie('X-CSRF-Token', csrfToken, { 
+        httpOnly: false, // Accessible by JS
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/'
+      });
+
+      res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
       res.json({ 
         token, 
-        refreshToken,
         user: { id: user.id, email: user.email, name: user.name } 
       });
     } catch (error) {
@@ -120,54 +138,68 @@ export const authController = {
 
   async refreshToken(req: Request, res: Response) {
     try {
-      const { refreshToken } = refreshTokenSchema.parse(req.body);
+      const refreshToken = req.cookies.refreshToken;
 
-      const savedToken = await prisma.refreshToken.findUnique({
+      if (!refreshToken) {
+        res.status(401).json({ message: 'Refresh token not found' });
+        return;
+      }
+
+      const storedToken = await prisma.refreshToken.findUnique({
         where: { token: refreshToken },
         include: { user: true }
       });
 
-      if (!savedToken || savedToken.revoked || savedToken.expiresAt < new Date()) {
-        res.status(401).json({ message: 'Invalid or expired refresh token' });
+      if (!storedToken || storedToken.revoked || storedToken.expiresAt < new Date()) {
+        res.clearCookie('refreshToken');
+        res.status(403).json({ message: 'Invalid refresh token' });
         return;
       }
 
-      // Verify signature
       try {
         jwt.verify(refreshToken, REFRESH_SECRET);
       } catch (err) {
-        res.status(401).json({ message: 'Invalid token signature' });
+        res.clearCookie('refreshToken');
+        res.status(403).json({ message: 'Invalid refresh token signature' });
         return;
       }
 
-      // Rotate token
-      const newToken = jwt.sign({ id: savedToken.userId, role: savedToken.user.role }, JWT_SECRET, { expiresIn: '15m' });
-      const newRefreshToken = jwt.sign({ id: savedToken.userId }, REFRESH_SECRET, { expiresIn: '7d' });
+      await prisma.refreshToken.update({
+        where: { id: storedToken.id },
+        data: { revoked: true }
+      });
 
-      // Revoke old, create new
-      await prisma.$transaction([
-        prisma.refreshToken.update({
-          where: { id: savedToken.id },
-          data: { revoked: true }
-        }),
-        prisma.refreshToken.create({
-          data: {
-            token: newRefreshToken,
-            userId: savedToken.userId,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-          }
-        })
-      ]);
+      const { token: newAccessToken, refreshToken: newRefreshToken } = generateTokens(storedToken.user);
 
-      res.json({ token: newToken, refreshToken: newRefreshToken });
+      await prisma.refreshToken.create({
+        data: {
+          token: newRefreshToken,
+          userId: storedToken.userId,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        }
+      });
+
+      res.cookie('refreshToken', newRefreshToken, COOKIE_OPTIONS);
+      res.json({ token: newAccessToken });
+
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: 'Validation error', errors: (error as any).errors });
-        return;
-      }
       console.error('Refresh token error:', error);
-      res.status(500).json({ message: 'Error refreshing token' });
+      res.status(500).json({ message: 'Internal server error' });
     }
+  },
+
+  async logout(req: Request, res: Response) {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      try {
+        await prisma.refreshToken.updateMany({
+          where: { token: refreshToken },
+          data: { revoked: true }
+        });
+      } catch (e) {}
+    }
+    res.clearCookie('refreshToken');
+    res.json({ message: 'Logged out successfully' });
   },
 
   async forgotPassword(req: Request, res: Response) {
@@ -175,35 +207,32 @@ export const authController = {
       const { email } = forgotPasswordSchema.parse(req.body);
       const user = await prisma.user.findUnique({ where: { email } });
 
-      if (!user) {
-        res.status(200).json({ message: 'If the email exists, a reset link will be sent.' });
-        return;
+      if (user) {
+        const token = crypto.randomBytes(32).toString('hex');
+        await prisma.passwordResetToken.create({
+          data: {
+            token,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour
+          }
+        });
+
+        const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
+        await emailService.sendEmail(
+          user.email,
+          'Redefinição de Senha - Hexa Dashboard',
+          emailService.getPasswordResetTemplate(resetLink)
+        );
       }
 
-      const token = crypto.randomBytes(32).toString('hex');
-      await prisma.passwordResetToken.create({
-        data: {
-          token,
-          userId: user.id,
-          expiresAt: new Date(Date.now() + 60 * 60 * 1000) // 1 hour
-        }
-      });
-
-      const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
-      await emailService.sendEmail(
-        user.email,
-        'Redefinição de Senha - Hexa Dashboard',
-        emailService.getPasswordResetTemplate(resetLink)
-      );
-
-      res.status(200).json({ message: 'If the email exists, a reset link will be sent.' });
+      // Always return success to prevent email enumeration
+      res.json({ message: 'If an account exists, a password reset email has been sent.' });
     } catch (error) {
-       if (error instanceof z.ZodError) {
+      if (error instanceof z.ZodError) {
         res.status(400).json({ message: 'Validation error', errors: (error as any).errors });
         return;
       }
-      console.error('Forgot password error:', error);
-      res.status(500).json({ message: 'Error processing forgot password' });
+      res.status(500).json({ message: 'Error processing request' });
     }
   },
 
@@ -222,24 +251,19 @@ export const authController = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
+      await prisma.user.update({
+        where: { id: resetToken.userId },
+        data: { password: hashedPassword }
+      });
 
-      await prisma.$transaction([
-        prisma.user.update({
-          where: { id: resetToken.userId },
-          data: { password: hashedPassword }
-        }),
-        prisma.passwordResetToken.delete({
-          where: { id: resetToken.id }
-        })
-      ]);
+      await prisma.passwordResetToken.delete({ where: { id: resetToken.id } });
 
-      res.status(200).json({ message: 'Password reset successfully' });
+      res.json({ message: 'Password reset successfully' });
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ message: 'Validation error', errors: (error as any).errors });
         return;
       }
-      console.error('Reset password error:', error);
       res.status(500).json({ message: 'Error resetting password' });
     }
   },
@@ -247,9 +271,10 @@ export const authController = {
   async verifyEmail(req: Request, res: Response) {
     try {
       const { token } = verifyEmailSchema.parse(req.body);
-
+      
       const verificationToken = await prisma.emailVerificationToken.findUnique({
-        where: { token }
+        where: { token },
+        include: { user: true }
       });
 
       if (!verificationToken || verificationToken.expiresAt < new Date()) {
@@ -257,41 +282,40 @@ export const authController = {
         return;
       }
 
-      await prisma.$transaction([
-        prisma.user.update({
-          where: { id: verificationToken.userId },
-          data: { emailVerified: new Date() }
-        }),
-        prisma.emailVerificationToken.delete({
-          where: { id: verificationToken.id }
-        })
-      ]);
+      await prisma.user.update({
+        where: { id: verificationToken.userId },
+        data: { emailVerified: new Date() }
+      });
 
-      res.status(200).json({ message: 'Email verified successfully' });
+      await prisma.emailVerificationToken.delete({ where: { id: verificationToken.id } });
+
+      res.json({ message: 'Email verified successfully' });
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ message: 'Validation error', errors: (error as any).errors });
         return;
       }
-      console.error('Verify email error:', error);
       res.status(500).json({ message: 'Error verifying email' });
     }
   },
 
-  async me(req: any, res: Response) {
+  async me(req: Request, res: Response) {
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: req.user.id },
-        select: { id: true, name: true, email: true, role: true }
-      });
+      // req.user is populated by authenticateToken middleware
+      const user = (req as any).user;
       if (!user) {
-         res.status(404).json({ message: 'User not found' });
-         return;
+        res.status(404).json({ message: 'User not found' });
+        return;
       }
-      res.json(user);
+      
+      const userProfile = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { id: true, name: true, email: true, role: true, emailVerified: true }
+      });
+
+      res.json(userProfile);
     } catch (error) {
-      console.error('Me endpoint error:', error);
-      res.status(500).json({ message: 'Error fetching user' });
+      res.status(500).json({ message: 'Error fetching user profile' });
     }
   }
 };

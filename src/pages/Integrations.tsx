@@ -1,8 +1,23 @@
 import { useState, useEffect } from 'react';
-import { CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle2, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
 import api from '../services/api';
+import { toast } from 'sonner';
 
-const IntegrationCard = ({ name, icon, status, onConnect }: any) => {
+interface Integration {
+  id: string;
+  userId: string;
+  platform: string;
+  status: 'CONNECTED' | 'DISCONNECTED';
+  lastSync: string;
+}
+
+interface Platform {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+const IntegrationCard = ({ name, icon, status, onConnect, isConnecting }: any) => {
   const isConnected = status === 'CONNECTED';
 
   return (
@@ -29,52 +44,84 @@ const IntegrationCard = ({ name, icon, status, onConnect }: any) => {
 
       <button
         onClick={onConnect}
-        disabled={isConnected}
-        className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+        disabled={isConnected || isConnecting}
+        className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
           isConnected
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'bg-hexa-primary text-white hover:bg-indigo-700'
         }`}
       >
-        {isConnected ? 'Gerenciar' : 'Conectar Conta'}
+        {isConnecting ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" /> Conectando...
+          </>
+        ) : isConnected ? (
+          'Gerenciar'
+        ) : (
+          'Conectar Conta'
+        )}
       </button>
     </div>
   );
 };
 
 export const Integrations = () => {
-  const [integrations, setIntegrations] = useState<any[]>([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [connectingId, setConnectingId] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
-  const platforms = [
+  const platforms: Platform[] = [
     { id: 'FACEBOOK', name: 'Facebook Ads', icon: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg' },
     { id: 'GOOGLE', name: 'Google Ads', icon: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg' },
     { id: 'TIKTOK', name: 'TikTok Ads', icon: 'https://sf16-scmcdn-sg.ibytedtos.com/goofy/tiktok/web/node/_next/static/images/logo-dark-e5f8fe6.png' },
   ];
 
+  const fetchIntegrations = async () => {
+    try {
+      const response = await api.get('/integrations');
+      setIntegrations(response.data);
+    } catch (error) {
+      console.error('Error fetching integrations:', error);
+      toast.error('Erro ao carregar integrações');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchIntegrations = async () => {
-      try {
-        const response = await api.get('/integrations');
-        setIntegrations(response.data);
-      } catch (error) {
-        console.error('Error fetching integrations:', error);
-      }
-    };
     fetchIntegrations();
   }, []);
 
   const handleConnect = async (platformId: string) => {
+    setConnectingId(platformId);
     try {
-      // Mock auth code
+      // Mock auth code - in production this would be a redirect to OAuth provider
       const authCode = `auth_${Math.random().toString(36)}`;
       await api.post('/integrations/connect', { platform: platformId, authCode });
       
+      toast.success('Integração conectada com sucesso!');
       // Refresh list
-      const response = await api.get('/integrations');
-      setIntegrations(response.data);
+      await fetchIntegrations();
     } catch (error) {
       console.error('Error connecting:', error);
-      alert('Erro ao conectar integração');
+      toast.error('Erro ao conectar integração');
+    } finally {
+      setConnectingId(null);
+    }
+  };
+
+  const handleSyncAll = async () => {
+    setSyncing(true);
+    try {
+      // In a real app, you might have a dedicated sync endpoint
+      // For now, we'll just refresh the list which confirms status
+      await fetchIntegrations();
+      toast.success('Sincronização concluída!');
+    } catch (error) {
+      toast.error('Erro ao sincronizar dados');
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -83,6 +130,14 @@ export const Integrations = () => {
     return integration ? integration.status : 'DISCONNECTED';
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 text-hexa-primary animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -90,9 +145,13 @@ export const Integrations = () => {
           <h2 className="text-2xl font-bold text-gray-900">Integrações</h2>
           <p className="text-gray-500 mt-1">Gerencie suas conexões com redes sociais e plataformas de anúncios.</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50">
-          <RefreshCw className="w-4 h-4" />
-          Sincronizar Tudo
+        <button 
+          onClick={handleSyncAll}
+          disabled={syncing}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+          {syncing ? 'Sincronizando...' : 'Sincronizar Tudo'}
         </button>
       </div>
 
@@ -104,6 +163,7 @@ export const Integrations = () => {
             icon={platform.icon}
             status={getStatus(platform.id)}
             onConnect={() => handleConnect(platform.id)}
+            isConnecting={connectingId === platform.id}
           />
         ))}
       </div>

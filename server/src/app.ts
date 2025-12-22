@@ -1,19 +1,35 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
 import passport from './config/passport';
 import authRoutes from './routes/auth.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import aiRoutes from './routes/ai.routes';
 import { apiLimiter } from './middleware/rateLimiter';
+import { csrfProtection } from './middleware/csrf';
+import { trafficLogger } from './middleware/trafficLogger';
 
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(compression());
+app.use(cors({
+  origin: 'http://localhost:5173', // Must be specific for credentials
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 app.use(passport.initialize());
+
+// Traffic Logging
+app.use(trafficLogger);
+
+// CSRF Protection
+app.use(csrfProtection);
 
 // API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
@@ -31,5 +47,8 @@ app.use('/api/auth', authRoutes);
 
 // Dashboard Routes
 app.use('/api', dashboardRoutes);
+
+// AI Routes
+app.use('/api/ai', aiRoutes);
 
 export default app;

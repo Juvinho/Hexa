@@ -90,17 +90,6 @@ router.post('/login', authController.login);
  *   post:
  *     summary: Refresh access token
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - refreshToken
- *             properties:
- *               refreshToken:
- *                 type: string
  *     responses:
  *       200:
  *         description: New access token generated
@@ -108,6 +97,18 @@ router.post('/login', authController.login);
  *         description: Invalid refresh token
  */
 router.post('/refresh-token', authController.refreshToken);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ */
+router.post('/logout', authController.logout);
 
 /**
  * @swagger

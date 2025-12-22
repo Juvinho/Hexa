@@ -1,7 +1,9 @@
 import { ReactNode, FC } from 'react';
 import { Sidebar } from './Sidebar';
-import { Bell, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { NotificationDropdown } from './NotificationDropdown';
+import { ScrollEnhancer } from './ScrollEnhancer';
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,10 +12,11 @@ interface LayoutProps {
 export const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
+      <ScrollEnhancer />
       <Sidebar />
       
       <div className="pl-64 transition-all duration-200">
-        <header className="h-16 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between px-8 sticky top-0 z-10 transition-colors duration-200">
+        <header className="h-16 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between px-8 sticky top-0 z-40 transition-colors duration-200">
           <div className="flex items-center gap-4 w-96">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500" />
@@ -28,13 +31,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             
-            <button className="p-2 text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 relative transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>
-            </button>
+            <NotificationDropdown />
             
             {/* User Avatar Placeholder */}
-            <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-semibold text-sm border border-indigo-200 dark:border-indigo-800">
+            <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold text-sm border border-primary-200 dark:border-primary-800">
               AD
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Activity, Search, Filter, Facebook, Instagram, Youtube, MonitorPlay, MousePointer } from 'lucide-react';
 import api from '../services/api';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 export const Campaigns = () => {
   const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -47,7 +48,11 @@ export const Campaigns = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-6"
+    >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Gerenciar Campanhas</h1>
@@ -70,7 +75,12 @@ export const Campaigns = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
+      >
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 dark:bg-slate-900/50">
@@ -138,7 +148,7 @@ export const Campaigns = () => {
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

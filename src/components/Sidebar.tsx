@@ -19,8 +19,8 @@ export const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 flex flex-col fixed left-0 top-0 transition-colors duration-200">
       <div className="p-6 border-b border-gray-100 dark:border-slate-700">
-        <h1 className="text-2xl font-bold text-hexa-primary dark:text-indigo-400 flex items-center gap-2">
-          <div className="w-8 h-8 bg-hexa-primary dark:bg-indigo-500 rounded-lg flex items-center justify-center text-white text-lg">
+        <h1 className="text-2xl font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary-600 dark:bg-primary-500 rounded-lg flex items-center justify-center text-white text-lg">
             H
           </div>
           Hexa
@@ -36,7 +36,7 @@ export const Sidebar = () => {
               clsx(
                 'flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
                 isActive
-                  ? 'bg-indigo-50 dark:bg-indigo-900/20 text-hexa-primary dark:text-indigo-400'
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
                   : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200'
               )
             }

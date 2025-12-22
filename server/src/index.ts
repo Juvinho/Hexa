@@ -23,6 +23,15 @@ setInterval(() => {
     timestamp: new Date().toISOString()
   };
   io.emit('dashboard_update', mockData);
+
+  // Mock Notification occasionally (10% chance)
+  if (Math.random() > 0.9) {
+    io.emit('notification', {
+      title: 'Nova Conversão',
+      message: `Novo lead convertido: R$ ${mockData.revenue}`,
+      type: 'success'
+    });
+  }
 }, 5000); // Every 5 seconds
 
 io.on('connection', (socket) => {

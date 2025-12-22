@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Activity, PieChart, TrendingUp, DollarSign } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart as RePie, Pie, Cell } from 'recharts';
+import { Activity, TrendingUp, PieChart } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RePie, Pie, Cell, Legend } from 'recharts';
 import api from '../services/api';
 import { toast } from 'sonner';
+import { ChartWrapper } from '../components/ChartWrapper';
+import { motion } from 'framer-motion';
 
 export const Reports = () => {
   const [data, setData] = useState<any[]>([]);
@@ -45,8 +47,28 @@ export const Reports = () => {
     </div>
   );
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-900 border border-slate-700 p-4 rounded-lg shadow-xl">
+          <p className="text-slate-300 text-sm mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm font-semibold" style={{ color: entry.color }}>
+              {entry.name}: {entry.value}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-6"
+    >
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Relatórios Avançados</h1>
         <p className="text-slate-500 dark:text-slate-400">Análise detalhada de performance e conversão</p>
@@ -54,79 +76,87 @@ export const Reports = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Spend vs Revenue Chart */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-indigo-600" />
-              Investimento x Receita (Diário)
-            </h3>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700" />
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={(str) => new Date(str).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-                  className="text-slate-500 text-xs"
-                />
-                <YAxis className="text-slate-500 text-xs" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'rgb(30 41 59)', borderColor: 'rgb(51 65 85)', color: '#fff' }}
-                />
-                <Legend />
-                <Area type="monotone" dataKey="spend" name="Investimento" stroke="#EF4444" fillOpacity={1} fill="url(#colorSpend)" />
-                <Area type="monotone" dataKey="revenue" name="Receita Estimada" stroke="#10B981" fillOpacity={1} fill="url(#colorRevenue)" /> // Assuming revenue exists in data, otherwise mocking it
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <ChartWrapper 
+          title="Investimento x Receita (Diário)" 
+          delay={0.1}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#EF4444" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#EF4444" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
+              <XAxis 
+                dataKey="date" 
+                tickFormatter={(str) => new Date(str).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                axisLine={false}
+                tickLine={false}
+                tick={{fill: '#94a3b8', fontSize: 12}}
+                dy={10}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{fill: '#94a3b8', fontSize: 12}} 
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend wrapperStyle={{paddingTop: '20px'}} />
+              <Area 
+                type="monotone" 
+                dataKey="spend" 
+                name="Investimento" 
+                stroke="#EF4444" 
+                fillOpacity={1} 
+                fill="url(#colorSpend)" 
+                strokeWidth={2}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="revenue" 
+                name="Receita Estimada" 
+                stroke="#10B981" 
+                fillOpacity={1} 
+                fill="url(#colorRevenue)" 
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartWrapper>
 
         {/* Leads by Platform */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-indigo-600" />
-              Distribuição de Leads por Plataforma
-            </h3>
-          </div>
-          <div className="h-[300px] flex items-center justify-center">
-             <ResponsiveContainer width="100%" height="100%">
-              <RePieChart>
-                <Pie
-                  data={platformData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {platformData.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </RePieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <ChartWrapper 
+          title="Distribuição de Leads por Plataforma" 
+          delay={0.2}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <RePie>
+              <Pie
+                data={platformData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={100}
+                fill="#8884d8"
+                paddingAngle={5}
+                dataKey="value"
+              >
+                {platformData.map((entry: any, index: number) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend wrapperStyle={{paddingTop: '20px'}} />
+            </RePie>
+          </ResponsiveContainer>
+        </ChartWrapper>
       </div>
-    </div>
+    </motion.div>
   );
 };
-
-// Helper for Pie Chart
-const RePieChart = RePie;
