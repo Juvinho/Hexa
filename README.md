@@ -188,7 +188,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **Feito com ❤️ por [Juvinho](https://github.com/Juvinho)**
 
-[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/seu-linkedin)](https://www.linkedin.com/in/seu-linkedin)
-[![Gmail Badge](https://img.shields.io/badge/-Gmail-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:seuemail@gmail.com)](mailto:seuemail@gmail.com)
+[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/juan-felipe-s-soares-004145331/)](https://www.linkedin.com/in/juan-felipe-s-soares-004145331/)
+[![Gmail Badge](https://img.shields.io/badge/-Gmail-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:umjuan123@gmail.com)](mailto:umjuan123@gmail.com)
 
 </div>
