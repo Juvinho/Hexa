@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-hexa-primary: #4F46E5;
+  --color-hexa-secondary: #7C3AED;
+  --color-hexa-dark: #020617;
+  --font-sans: 'Inter', sans-serif;
+
+  /* Primary Palette mapped to variable */
+  --color-primary-50: color-mix(in srgb, var(--color-hexa-primary) 5%, white);
+  --color-primary-100: color-mix(in srgb, var(--color-hexa-primary) 10%, white);
+  --color-primary-200: color-mix(in srgb, var(--color-hexa-primary) 20%, white);
+  --color-primary-300: color-mix(in srgb, var(--color-hexa-primary) 40%, white);
+  --color-primary-400: color-mix(in srgb, var(--color-hexa-primary) 60%, white);
+  --color-primary-500: color-mix(in srgb, var(--color-hexa-primary) 80%, white);
+  --color-primary-600: var(--color-hexa-primary);
+  --color-primary-700: color-mix(in srgb, var(--color-hexa-primary), black 10%);
+  --color-primary-800: color-mix(in srgb, var(--color-hexa-primary), black 20%);
+  --color-primary-900: color-mix(in srgb, var(--color-hexa-primary), black 30%);
+  --color-primary-950: color-mix(in srgb, var(--color-hexa-primary), black 40%);
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-950;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-slate-900;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-600;
+}

@@ -1,194 +1,129 @@
-# Hexa Dashboard 🚀
+# 🚀 Hexa Dashboard - Gestão Inteligente de Anúncios
 
-<div align="center">
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React](https://img.shields.io/badge/frontend-React_19-61DAFB.svg?logo=react)
+![Node](https://img.shields.io/badge/backend-Node.js-339933.svg?logo=node.js)
+![TypeScript](https://img.shields.io/badge/language-TypeScript-3178C6.svg?logo=typescript)
+![Status](https://img.shields.io/badge/status-active-success.svg)
 
-![Hexa Dashboard Banner](https://img.shields.io/badge/Hexa-Dashboard-indigo?style=for-the-badge&logo=react)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+O **Hexa Dashboard** é uma plataforma avançada para consolidação e análise de campanhas de tráfego pago (Google Ads, Meta Ads), potencializada por Inteligência Artificial para gerar insights acionáveis em tempo real.
 
-**A Solução Definitiva para Gestão de Anúncios e Campanhas.**
-
-[Demonstração](#) • [Funcionalidades](#-funcionalidades) • [Instalação](#-instalação) • [Contribuir](#-contribuindo)
-
-</div>
-
----
-
-## 📖 Sobre
-
-**Hexa Dashboard** é uma plataforma de gerenciamento de anúncios poderosa, moderna e de alto desempenho, projetada para otimizar o rastreamento de campanhas, gerenciamento de leads e relatórios. Construído com as tecnologias web mais recentes, oferece uma experiência de usuário fluida, responsiva e visualmente impactante.
-
-Seja você uma agência de marketing ou um gestor de tráfego independente, o Hexa Dashboard fornece as ferramentas necessárias para escalar suas operações.
+![Dashboard Preview](https://via.placeholder.com/800x400?text=Hexa+Dashboard+Preview)
 
 ---
 
 ## ✨ Funcionalidades
 
-### 🖥️ Painel Principal
-*   **Dashboard Interativo**: Visualização em tempo real dos principais indicadores de desempenho (KPIs).
-*   **Gráficos Dinâmicos**: Acompanhe tendências de crescimento e métricas vitais.
+### 🧠 Inteligência Artificial & Insights
+- **Análise Automática**: O sistema analisa métricas de desempenho e sugere otimizações.
+- **Detecção de Anomalias**: Alertas sobre gastos excessivos ou queda brusca de performance.
 
-### 📢 Gestão de Campanhas
-*   **Controle Total**: Crie, edite e pause campanhas com facilidade.
-*   **Multi-plataforma**: Suporte para rastreamento de diversas fontes de tráfego.
+### 📊 Dashboard Temporal Inteligente
+O sistema adapta a interface baseada na maturidade da conta do usuário:
+*   **Fase de Aprendizado (Dia 0-2)**: Interface de "System Calibration" que monitora a coleta inicial de dados sem exibir gráficos vazios ou confusos.
+*   **Fase Ativa (Dia 3+)**: Liberação completa de gráficos comparativos (Hoje vs Ontem, Hoje vs Média de 2 dias) e tendências avançadas.
 
-### 👥 CRM de Leads
-*   **Pipeline de Vendas**: Kanban ou lista para gerenciar o status dos leads.
-*   **Rastreamento Detalhado**: Histórico completo de interações com cada lead.
+### ⚡ Tempo Real
+- **WebSocket Sync**: Atualizações de leads e gastos instantaneamente na tela, sem necessidade de refresh.
+- **Monitoramento Live**: Acompanhe o ROI e o CPL (Custo por Lead) conforme as conversões acontecem.
 
-### ⚙️ Sistema e Segurança
-*   **Autenticação JWT**: Login seguro com suporte a OAuth (Google, GitHub).
-*   **Controle de Acesso (RBAC)**: Permissões granulares para diferentes tipos de usuários.
-*   **Tema Escuro**: Interface "Dark Mode" nativa para menor cansaço visual.
+### 🛡️ Segurança & Arquitetura
+- **Autenticação JWT**: Sessões seguras com Refresh Tokens e proteção CSRF.
+- **Arquitetura Escalável**: Backend em Node.js com Prisma ORM e Frontend em React (Vite).
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-<details>
-  <summary><b>Frontend</b></summary>
-
-*   **Framework**: [React](https://reactjs.org/) (v18)
-*   **Build Tool**: [Vite](https://vitejs.dev/)
-*   **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
-*   **Estilização**: [Tailwind CSS](https://tailwindcss.com/) (v4 - Configuração CSS-first)
-*   **Ícones**: [Lucide React](https://lucide.dev/)
-*   **Roteamento**: [React Router](https://reactrouter.com/)
-*   **Estado**: React Context API
-*   **Formulários**: React Hook Form + Zod
-
-</details>
-
-<details>
-  <summary><b>Backend</b></summary>
-
-*   **Runtime**: [Node.js](https://nodejs.org/)
-*   **Framework**: [Express.js](https://expressjs.com/)
-*   **ORM**: [Prisma](https://www.prisma.io/)
-*   **Banco de Dados**: SQLite (Dev) / PostgreSQL (Prod)
-*   **Auth**: JSON Web Tokens (JWT)
-
-</details>
+| Componente | Tecnologia | Descrição |
+| :--- | :--- | :--- |
+| **Frontend** | React 19 + Vite | Interface reativa de alta performance. |
+| **Estilização** | Tailwind CSS | Design moderno e responsivo. |
+| **Gráficos** | Recharts | Visualização de dados interativa. |
+| **Backend** | Express + Node.js | API RESTful robusta. |
+| **Database** | PostgreSQL + Prisma | ORM moderno e tipado. |
+| **Real-time** | Socket.io | Comunicação bidirecional cliente-servidor. |
+| **AI Engine** | Google Gemini API | Processamento de linguagem natural para insights. |
 
 ---
 
-## 📂 Estrutura do Projeto
-
-```
-Hexa/
-├── src/                # Código fonte do Frontend
-│   ├── components/     # Componentes Reutilizáveis
-│   ├── context/        # Gerenciamento de Estado Global
-│   ├── pages/          # Páginas da Aplicação
-│   └── styles/         # Estilos Globais
-├── server/             # Backend API
-│   ├── src/            # Código fonte do Backend
-│   ├── prisma/         # Schemas e Migrations do Banco de Dados
-│   └── routes/         # Rotas da API
-└── public/             # Assets Estáticos
-```
-
----
-
-## 🚀 Começando
-
-Siga estes passos para configurar o projeto localmente em sua máquina.
+## 🚀 Instalação e Configuração
 
 ### Pré-requisitos
+- Node.js (v18+)
+- PostgreSQL (Local ou Docker)
 
-*   [Node.js](https://nodejs.org/) (v16 ou superior)
-*   [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
-*   [Git](https://git-scm.com/)
+### 1. Clone o Repositório
+```bash
+git clone https://github.com/seu-usuario/hexa-dashboard.git
+cd hexa-dashboard
+```
 
-### 🔧 Instalação
+### 2. Configuração do Backend
+```bash
+cd server
+npm install
 
-1.  **Clone o repositório**
-    ```bash
-    git clone https://github.com/Juvinho/Hexa.git
-    cd Hexa
-    ```
+# Copie o arquivo de exemplo
+cp .env.example .env
 
-2.  **Instale as dependências**
-    ```bash
-    npm install         # Raiz
-    cd server && npm install  # Backend
-    cd ..               # Voltar para raiz
-    ```
+# Edite o .env com suas credenciais de banco e chaves de API
+```
 
-3.  **Configuração de Ambiente (.env)**
-    Crie um arquivo `.env` no diretório `server`:
-    ```env
-    DATABASE_URL="file:./dev.db"
-    JWT_SECRET="sua_chave_super_secreta_aqui"
-    PORT=3000
-    ```
+### 3. Configuração do Frontend
+```bash
+# Na raiz do projeto
+npm install
+```
 
-4.  **Banco de Dados**
-    ```bash
-    cd server
-    npx prisma generate
-    npx prisma migrate dev --name init
-    cd ..
-    ```
+### 4. Inicialização
+Para rodar todo o ambiente (Frontend + Backend) em modo de desenvolvimento:
 
-5.  **Rodar a Aplicação**
-    Recomendamos abrir dois terminais:
+```bash
+# Terminal 1 (Backend)
+cd server
+npm run dev
 
-    **Terminal 1 (Backend):**
-    ```bash
-    cd server
-    npm run dev
-    ```
+# Terminal 2 (Frontend)
+npm run dev
+```
 
-    **Terminal 2 (Frontend):**
-    ```bash
-    npm run dev
-    ```
-
-6.  **Acessar**
-    Abra `http://localhost:5173` no seu navegador.
+Acesse: `http://localhost:5173`
 
 ---
 
-## 🗺️ Roadmap
+## 📂 Estrutura de Diretórios
 
-- [x] Dashboard Inicial
-- [x] Autenticação (Login/Registro)
-- [x] CRUD de Campanhas
-- [x] Listagem de Leads
-- [ ] Integração com Facebook Ads API
-- [ ] Exportação de Relatórios em PDF/CSV
-- [ ] Sistema de Notificações em Tempo Real
-- [ ] Modo Light (Tema Claro)
-
----
-
-## 🤝 Contribuindo
-
-Contribuições são o que fazem a comunidade open source um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será **muito apreciada**.
-
-1.  Faça um Fork do projeto
-2.  Crie sua Feature Branch (`git checkout -b feature/RecursoIncrivel`)
-3.  Commit suas mudanças (`git commit -m 'Add: RecursoIncrivel'`)
-4.  Push para a Branch (`git push origin feature/RecursoIncrivel`)
-5.  Abra um Pull Request
+```
+Hexa Dashboard/
+├── BKP/                # Backups locais automáticos
+├── src/                # Código fonte Frontend (React)
+│   ├── components/     # Componentes reutilizáveis
+│   ├── pages/          # Páginas da aplicação
+│   ├── services/       # Integração com API
+│   └── context/        # Gestão de estado global
+├── server/             # Código fonte Backend (Node.js)
+│   ├── src/
+│   │   ├── controllers/# Lógica de controle
+│   │   ├── routes/     # Rotas da API
+│   │   └── services/   # Regras de negócio
+│   └── prisma/         # Schemas do banco de dados
+└── ...
+```
 
 ---
 
-## 📄 Licença
+## 🛡️ Backup Local
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+O projeto conta com um sistema de backup local para arquivos críticos.
+Consulte o [README_BKP.md](./BKP/README_BKP.md) para mais detalhes sobre como executar e restaurar backups.
 
 ---
 
-<div align="center">
+## 📝 Licença
 
-**Feito com ❤️ por [Juvinho](https://github.com/Juvinho)**
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
-[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/juan-felipe-s-soares-004145331/)](https://www.linkedin.com/in/juan-felipe-s-soares-004145331/)
-[![Gmail Badge](https://img.shields.io/badge/-Gmail-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:umjuan123@gmail.com)](mailto:umjuan123@gmail.com)
+---
 
-</div>
+Desenvolvido com 💜 pela equipe Hexa.
